@@ -5,6 +5,77 @@
     <link rel="stylesheet" href="generalstyle.css">
 </head>
 <body>
-    <img src="bigLogo.PNG" alt="Displayed Image">
+    <header>
+        <img src="bigLogo.PNG" alt="Raaz: Privacy Simplified" id="logo">
+    </header>
+    <article id="home">
+    <h1 id="introduction"> </h1>
+    <p>How can I help you today?</p>
+    <table>
+        <tr>
+            <th align="left"><b>Options</b></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>Block Ads</td>
+            <td><label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Block Trackers</td>
+            <td><label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Block Cookies</td>
+            <td><label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Block Referer Headers</td>
+            <td><label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Safe Email Practices Reminder</td>
+            <td><label class="toggle-switch">
+                <input type="checkbox" />
+                <span class="slider"></span>
+            </label>
+            </td>
+        </tr>
+    </table>
+    <p id="homeLinks">
+        <a href="" class="decoratedLink"><b>Is My E-Mail Safe?</b></a>
+        <br><br>
+        <a href="" class="decoratedLink"><b>My Security Dashboard</b></a>
+    </p>
+    </article>
+    <article id="pwned">
+        <h1>Is My E-Mail Safe?</h1>
+        Please enter your e-mail below:<br><br>
+        <input type="email" id="email" placeholder="username@domain.com"/>
+        <br><br>
+        <button id="checkpwned" class="decoratedLink"><b>Check Now</b></button><br>
+        <div id="pwnedDiv"></div>
+    </article>
+    <article id="dashboard">
+        <h1>My Security Dashboard</h1>
+        <div id="dashDiv">
+            
+        </div>
+    </article>
 </body>
 </html>
