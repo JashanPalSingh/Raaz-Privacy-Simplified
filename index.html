@@ -3,6 +3,7 @@
 <head>
     <title>Raaz: Privacy Simplified</title>
     <link rel="stylesheet" href="generalstyle.css">
+    <script src="home.js"></script>
 </head>
 <body>
     <header>
@@ -18,8 +19,8 @@
         </tr>
         <tr>
             <td>Block Ads</td>
-            <td><label class="toggle-switch">
-                <input type="checkbox" />
+                <td><label class="toggle-switch"> <!-- Reference: https://www.geeksforgeeks.org/how-to-create-toggle-switch-by-using-html-and-css/ -->
+                <input type="checkbox" id="toggleAdBlock">
                 <span class="slider"></span>
             </label>
             </td>
@@ -63,7 +64,7 @@
         <a href="" class="decoratedLink"><b>My Security Dashboard</b></a>
     </p>
     </article>
-    <article id="pwned">
+    <article id="pwned" class="hidden">
         <h1>Is My E-Mail Safe?</h1>
         Please enter your e-mail below:<br><br>
         <input type="email" id="email" placeholder="username@domain.com"/>
@@ -71,11 +72,12 @@
         <button id="checkpwned" class="decoratedLink"><b>Check Now</b></button><br>
         <div id="pwnedDiv"></div>
     </article>
-    <article id="dashboard">
+    <article id="dashboard" class="hidden">
         <h1>My Security Dashboard</h1>
         <div id="dashDiv">
-            
+
         </div>
     </article>
+    <script src="home.js"></script>
 </body>
 </html>

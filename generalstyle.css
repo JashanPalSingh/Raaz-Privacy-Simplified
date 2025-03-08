@@ -31,6 +31,7 @@ button{
     border: none;
 }
 
+/* Reference: https://www.geeksforgeeks.org/how-to-create-toggle-switch-by-using-html-and-css/ */
 /* Container for the toggle */
 .toggle-switch {
     position: relative;
@@ -77,4 +78,8 @@ button{
 
 .toggle-switch input:checked+.slider::before {
     transform: translateX(26px);
+}
+
+.hidden{
+    display: none;
 }
