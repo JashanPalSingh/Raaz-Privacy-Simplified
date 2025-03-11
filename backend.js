@@ -23,21 +23,6 @@ chrome.runtime.onMessage.addListener((message, sender,response) =>{
     }
 });
 
-//Block ads based on current state.
-chrome.webRequest.onBeforeRequest.addListener((details) =>{
-    if(!adBlockEnabled) return {cancel:false};
-    else{
-        const url = new URL(details.url);
-        if (blockedDomains.some((domain) => url.hostname.includes(domain))){
-            console.log(`Blocked: ${details.url}`);
-            return {cancel: true};
-        }
-    }},
-    { urls: ["<all_urls>"]},
-    ["blocking"]
-);
-
-
 // Function to update ad-blocking rules
 function updateRules(enable) {
     if (blockedDomains.length == 0) return;
@@ -59,3 +44,5 @@ function updateRules(enable) {
         console.log(enable ? `Enabled ${rules.length} ad-blocking rules` : "Ad blocking disabled");
     });
 }
+
+// -------------------------------------END OF AD BLOCKING FUNCTIONALITY-----------------------------------------------------
