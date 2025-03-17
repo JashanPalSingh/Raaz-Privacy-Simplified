@@ -12,55 +12,35 @@
     <article id="home">
     <h1 id="introduction"> </h1>
     <p>How can I help you today?</p>
-    <table>
-        <tr>
-            <th align="left"><b>Options</b></th>
-            <th></th>
-        </tr>
-        <tr>
-            <td>Block Ads</td>
-                <td><label class="toggle-switch"> <!-- Reference: https://www.geeksforgeeks.org/how-to-create-toggle-switch-by-using-html-and-css/ -->
-                <input type="checkbox" id="toggleAdBlock">
-                <span class="slider"></span>
-            </label>
-            </td>
-        </tr>
-        <tr>
-            <td>Block Trackers</td>
-            <td><label class="toggle-switch">
-                <input type="checkbox" />
-                <span class="slider"></span>
-            </label>
-            </td>
-        </tr>
-        <tr>
-            <td>Block Cookies</td>
-            <td><label class="toggle-switch">
-                <input type="checkbox" />
-                <span class="slider"></span>
-            </label>
-            </td>
-        </tr>
-        <tr>
-            <td>Block Referer Headers</td>
-            <td><label class="toggle-switch">
-                <input type="checkbox" />
-                <span class="slider"></span>
-            </label>
-            </td>
-        </tr>
-        <tr>
-            <td>Safe Email Practices Reminder</td>
-            <td><label class="toggle-switch">
-                <input type="checkbox" />
-                <span class="slider"></span>
-            </label>
-            </td>
-        </tr>
-    </table>
+    <h2><b>One Switch for Peaceful Browsing</b></h2>
+    <label class="toggle-switch">  <!-- Reference: https://www.geeksforgeeks.org/how-to-create-toggle-switch-by-using-html-and-css/ -->
+        <input type="checkbox" id="toggleAdBlock">
+        <span class="slider"></span>
+    </label><br>
+    <p>You may need to re-open your browser for privacy settings to take effect.</p>
+    <h2><b>What does this magical switch do?</b></h2>
+        
+                <h3><b>Ad and Tracker Blocking</b></h3>
+                <p>Raaz will block most intrusive and annoying ads and trackers from websites. Some ads can be malicious and trackers can be used to collect data about your browsing behaviour.</p>
+            
+                <h3><b>Third-Party Cookie Blocking</b></h3>
+                <p>Fret not Cookie Monster, These are not the cookies you eat! Much like trackers, cookies, especially third-party cookies, can be used to collect data about you and send you targeted ads.</p>
+            
+                <h3><b>Referer header Blocking</b></h3>
+                <p>Referer headers tell the current website where you are coming from. This can be used to track your browsing behaviour or stealing your information.</p>
+            
+    <h2><b>Additional Features.</b></h2>
+    <h3><b>Safe Email Practices Reminder</b></h3>
+    <label class="toggle-switch">
+        <input type="checkbox" id="togglePhishingReminder"/>
+        <span class="slider"></span>
+    </label>
+    <p>This will remind you about safe email and anti-phishing practices everytime you open your emails.</p>
     <p id="homeLinks">
+        <h3><b>Check an Email for Breaches</b></h3>
         <a href="" class="decoratedLink"><b>Is My E-Mail Safe?</b></a>
         <br><br>
+        <h3><b>How are we doing?</b></h3>
         <a href="" class="decoratedLink"><b>My Security Dashboard</b></a>
     </p>
     </article>

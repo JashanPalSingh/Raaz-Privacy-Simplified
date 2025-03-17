@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const response = await fetch(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`, {
                  method: "GET",
                  headers: {
-                    "hibp-api-key": "" // <<<<<<<<<<<<<<<<<< ADD API KEY HERE
+                    "hibp-api-key": "48937c9e6a6f4a20a8624bf8c48b74c8" // <<<<<<<<<<<<<<<<<< ADD API KEY HERE
                 }   
                 });
                 if(response.status == 404){
