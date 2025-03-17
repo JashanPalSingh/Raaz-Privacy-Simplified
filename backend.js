@@ -84,6 +84,7 @@ function updateTrackerRules(enable) {
 }
 
 // -------------------------------------END OF AD BLOCKING FUNCTIONALITY-----------------------------------------------------
+//--------------------------------------COOKIE BLOCKING----------------------------------------------------------------------
 
 function updateCookies(enable){
         chrome.privacy.websites.thirdPartyCookiesAllowed.set({ value: !enable });
