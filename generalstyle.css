@@ -83,3 +83,9 @@ button{
 .hidden{
     display: none;
 }
+
+.breachImage{
+    width: 100px;
+    filter: drop-shadow(5px 5px 2px #000000);
+    margin: 20px;
+}

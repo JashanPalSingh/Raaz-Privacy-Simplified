@@ -26,8 +26,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     //---------------------------------HAVE I BEEN PWNED?--------------------------------------------------//
     const checkPwnedButton = document.querySelector("#checkpwned");
+    const showPwnedButton = document.querySelector("#showPwned");
     const inputEmail = document.querySelector("#email");
     const pwnedDiv = document.querySelector("#pwnedDiv");
+    const emailDiv = document.querySelector("#pwned");
+
+    showPwnedButton.addEventListener("click", () => {
+        emailDiv.className = "";
+    });
 
     checkPwnedButton.addEventListener("click", async () => {
         const email = inputEmail.value.trim();
@@ -35,10 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
             pwnedDiv.innerHTML = "<p>Please enter a valid email address.</p>";
             return;
         }else{
+                pwnedDiv.textContent = "";
                 const response = await fetch(`https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}?truncateResponse=false`, {
                  method: "GET",
                  headers: {
-                    "hibp-api-key": "48937c9e6a6f4a20a8624bf8c48b74c8" // <<<<<<<<<<<<<<<<<< ADD API KEY HERE
+                    "hibp-api-key": "48937c9e6a6f4a20a8624bf8c48b74c8", // <<<<<<<<<<<<<<<<<< ADD API KEY HERE
+                    "User-Agent": "Raaz-Extension/1.0"
                 }   
                 });
                 if(response.status == 404){
@@ -51,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     let breachList = document.createElement("ul");
                     breaches.forEach(breach => {
                         let breachEntry = document.createElement("li");
-                        breachEntry.innerHTML = `<p><b>${breach.Name}</b><br><img src="${breach.LogoPath}" width ="100"><br><b>Breach Date: </b>${breach.BreachDate}</p>`;
+                        breachEntry.innerHTML = `<p><h3>${breach.Name}</h3><img src="${breach.LogoPath}" class ="breachImage"><br><b>Breach Date: </b>${breach.BreachDate}<br><b>What was breached: </b>${breach.DataClasses}</p>`;
                         breachList.appendChild(breachEntry);
                     });
                     let breachNotification = document.createElement("p");
