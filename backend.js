@@ -43,21 +43,30 @@ chrome.runtime.onMessage.addListener((message) =>{
     }
 });
 
-// Function to update ad-blocking rules
+/*Function to update ad-blocking rules.
+ Dynamic rules in Chrome API allow us to block network requests, upgrade http schemas to https, redirect network requests, or modify requests or response headers.
+ These rules are written in a JSON format and are implemented using Chrome API's declarativeNetRequest method. We use this functionality to block domains present in 
+ our ad and tracker list. Source 1: https://developer.chrome.com/docs/extensions/reference/api/declarativeNetRequest 
+                          Source 2: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest */
 function updateRules(enable) {
     if(enable){
         if (blockedDomains.length == 0) return;
-
+    
+    //We construct rule objects with the below specified attributes by mapping each entry (domain) in blockedDomains and assigning each entry a unique index starting at 1. 
     const rules = blockedDomains.map((domain, index) => ({
-        id: index + 1,  // Unique ID for each rule
-        priority: 1,
-        action: { type: "block" },
+        id: index + 1,      // Unique ID for each rule
+        priority: 1,        //Priority of our rule. Higher priority takes prevelance, we use the default value of 1 for all rules.
+        action: { type: "block" },      // Our rules block requests on the following conditions.
         condition: {
-            urlFilter: `||${domain}`,
-            resourceTypes: ["script", "image", "xmlhttprequest", "sub_frame"]
+            urlFilter: `||${domain}`,   // Our rule applies the action to any URL that contains onr of our black-listed domains. the "||" allows us to block domain name irresective of the preceeding sub-domain
+            resourceTypes: ["script", "image", "xmlhttprequest", "sub_frame"]   // These are the types of resources we want to block coming from our domains. These are the ads and trackers you see.
         }
     }));
-
+/* After setting up our new rules, we now put them into use. We use the updateDynamicRules within the declarativeNetRequest to update any existing rules.
+First, we remove existing rules with the same rule IDs as our newly created rules. We map the rules object to only send out our rule IDs to be 
+removed from the browser if they already exist.
+Second, we add the rules we created by feeding the rule object to the method. 
+*/
     chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: rules.map(rule => rule.id),
         addRules: rules
@@ -68,13 +77,15 @@ function updateRules(enable) {
     
 }
 
-// Function to update tracker-blocking rules
+// Function to update tracker-blocking rules. Funstionality of this part is the same as blocking ad domains, just with a few minor changes.
 function updateTrackerRules(enable) {
     if(enable){
-        if (blockedTrackers.length == 0) return;
+        if (blockedTrackers.length == 0) return; // Instead of feeding ad domains, we now feed tracker domains.
 
-        const trackerRules = blockedTrackers.map((tracker, index) => ({
-            id: index + 1,  // Unique ID for each rule
+        // We do not want our tracking rules to override our ad block rules, so the index of tracker rules begin after all ad domain rules.
+        // We added 1 as a buffer between indexes of ads and trackers.
+        const trackerRules = blockedTrackers.map((tracker, index = blockedDomains.length + 1) => ({
+            id: index + 1,
             priority: 1,
             action: { type: "block" },
             condition: {
@@ -96,6 +107,11 @@ function updateTrackerRules(enable) {
 // -------------------------------------END OF AD BLOCKING FUNCTIONALITY-----------------------------------------------------
 //--------------------------------------COOKIE BLOCKING----------------------------------------------------------------------
 
+/* This function simply changes the third-party cookie blocking setting within the Chrome browser.
+    If our switch is on, third party cookies allowed is set to false, meaning they are not allowed.
+    If our switch is off, third-party cookies are allowed (true).
+    Source: https://sunnyzhou-1024.github.io/chrome-extension-docs/extensions/privacy.html 
+*/
 function updateCookies(enable){
         chrome.privacy.websites.thirdPartyCookiesAllowed.set({ value: !enable });
 }
