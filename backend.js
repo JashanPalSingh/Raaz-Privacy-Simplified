@@ -76,7 +76,7 @@ Second, we add the rules we created by feeding the rule object to the method.
     });
     }
     /*The following code executes when the user disables the switch. we reate a temporary list of rule indexes that contains the rule ids of rules we created before.
-    we then remove our rules  */
+    we then remove our rules. */
     else{
         const indexes = [];
         for (let i = 1; i <= blockedDomains.length; i++) {
@@ -178,7 +178,11 @@ function showSafeEmailReminder() { // https://developer.mozilla.org/en-US/docs/M
 
 //------------------------------REFERER HEADER REMOVAL-------------------------------------------------------------------
 /* This functions takes care of blocking referer headers. Referer headers can be used to track a user's browsing behaviour.
-Referer headers can be removed the same way like ads or 
+Referer headers can be removed the same way like ads or trackers by using the declarativeNetRequest Chrome API. The only difference is,
+blocking headers uses different rule properties than ad or tracker domains.
+Reference 1: https://stackoverflow.com/questions/76921161/is-there-any-way-to-modify-the-headers-using-declarativenetrequest-updatedynamic 
+Reference 2: https://discourse.mozilla.org/t/modify-headers-with-declarativenetrequest-updatesessionrules/128888/3   
+Reference 3: https://developer.chrome.com/docs/extensions/mv2/reference/declarativeNetRequest?hl=hi 
 */
 function blockRefererHeader(enable){
     const headerIndex = blockedDomains.length + blockedTrackers.length + 1;
