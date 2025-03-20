@@ -92,4 +92,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
         }
     });
+    //---------------------------------END OF HAVE I BEEN PWNED?--------------------------------------------------//
+    //---------------------------------SAFE EMAIL REMINDER--------------------------------------------------//
+
+    const phishingReminderCheckbox = document.querySelector("#togglePhishingReminder");
+
+    chrome.storage.sync.get("phishingReminderToggle", (result) => {
+        if (result.phishingReminderToggle !== undefined) {
+            phishingReminderCheckbox.checked = result.phishingReminderToggle;
+        } else {
+            phishingReminderCheckbox.checked = false;
+            chrome.storage.sync.set({phishingReminderToggle: false});
+        }
+    });
+
+    phishingReminderCheckbox.addEventListener("change", () => {
+        const isEnabled = phishingReminderCheckbox.checked;
+        chrome.storage.sync.set({phishingReminderToggle: isEnabled});
+        chrome.runtime.sendMessage({action: "togglePhishingReminder", enabled: isEnabled});
+    });
+    //---------------------------------END OF SAFE EMAIL REMINDER--------------------------------------------------//
+
+    //---------------------------------SECURITY DASHBOARD--------------------------------------------------//
+    const showDash = document.querySelector("#showDash");
+    const dashboard = document.querySelector("#dashboard");    
+    const dashDiv = document.querySelector("#dashDiv");
+
+    showDash.addEventListener("click", () => {
+        dashboard.className = "";
+    })    
+
+    dashDiv.innerHTML = "<p>Elloooo</p>";
+
+
+
+
 });

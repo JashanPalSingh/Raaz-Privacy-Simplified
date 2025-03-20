@@ -2,6 +2,7 @@
 manifest.JSON to tell the browser that this file will govern all the services provided by our extension.*/
 
 //First, we define some variables that we will use within this file.
+let phishingReminderEnabled = false;
 let adBlockEnabled = true;  // Variable that decides, the current status of out ad-block switch, we initialize it as true be default and update it as user changes preferences.
 let blockedDomains = [];    // This is an empty list that will soon contain about six thousand entries of blocked domains as we fetch them from our blocked_domains.JSON.
 let blockedTrackers = [];   // This list will contain over fifteen thousand nefarious trackers present in our blocked-trackers.JSON.
@@ -115,3 +116,44 @@ function updateTrackerRules(enable) {
 function updateCookies(enable){
         chrome.privacy.websites.thirdPartyCookiesAllowed.set({ value: !enable });
 }
+
+//---------------------------------SAFE EMAIL REMINDER--------------------------------------------------//
+
+chrome.storage.sync.get("phishingReminderToggle", (result) => {
+    if (result.phishingReminderToggle !== undefined) {
+        phishingReminderEnabled = result.phishingReminderToggle;
+    } else {
+        phishingReminderEnabled = false;
+        chrome.storage.sync.set({ phishingReminderToggle: false });
+    }
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "togglePhishingReminder") {
+        phishingReminderEnabled = message.enabled;
+        chrome.storage.sync.set({ phishingReminderToggle: phishingReminderEnabled });
+    }
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onUpdated
+    if (changeInfo.status === 'complete' && tab.url) {
+        const emailDomains = ['mail.google.com', 'outlook.live.com', 'mail.yahoo.com'];
+        const isEmailService = emailDomains.some(domain => tab.url.includes(domain));
+        if (isEmailService) {
+            showSafeEmailReminder();
+        }
+    }
+});
+
+function showSafeEmailReminder() { // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Notifications
+    if (phishingReminderEnabled) {
+        chrome.notifications.create({
+            type: 'basic',
+            iconUrl: 'smallLogo.PNG',
+            title: 'Safe Email Practices Reminder',
+            message: 'Safe Email Reminder!!!!!',
+            priority: 2
+        });
+    }
+}
+
