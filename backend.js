@@ -27,6 +27,7 @@ chrome.storage.sync.get("adBlockToggle", (result) => {
         updateRules(adBlockEnabled);
         updateTrackerRules(adBlockEnabled);
         updateCookies(adBlockEnabled);
+        blockRefererHeader(adBlockEnabled);
     }
 });
 
@@ -41,6 +42,7 @@ chrome.runtime.onMessage.addListener((message) =>{
         updateRules(adBlockEnabled);
         updateTrackerRules(adBlockEnabled);
         updateCookies(adBlockEnabled);
+        blockRefererHeader(adBlockEnabled);
     }
 });
 
@@ -72,8 +74,18 @@ Second, we add the rules we created by feeding the rule object to the method.
         removeRuleIds: rules.map(rule => rule.id),
         addRules: rules
     });
-    }else{
-        return;
+    }
+    /*The following code executes when the user disables the switch. we reate a temporary list of rule indexes that contains the rule ids of rules we created before.
+    we then remove our rules  */
+    else{
+        const indexes = [];
+        for (let i = 1; i <= blockedDomains.length; i++) {
+            indexes.push(i);
+        }
+
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: indexes
+        })
     }
     
 }
@@ -100,7 +112,14 @@ function updateTrackerRules(enable) {
             addRules: trackerRules
         });
     }else{
-        return;
+        const indexes = [];
+        for (let i = blockedDomains.length + 1; i <= (blockedDomains.length + 1 + blockedTrackers.length); i++) {
+            indexes.push(i);
+        }
+
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: indexes
+        })
     }
     
 }
@@ -117,7 +136,7 @@ function updateCookies(enable){
         chrome.privacy.websites.thirdPartyCookiesAllowed.set({ value: !enable });
 }
 
-//---------------------------------SAFE EMAIL REMINDER--------------------------------------------------//
+//---------------------------------SAFE EMAIL REMINDER----------------------------------------------------------------------
 
 chrome.storage.sync.get("phishingReminderToggle", (result) => {
     if (result.phishingReminderToggle !== undefined) {
@@ -157,3 +176,35 @@ function showSafeEmailReminder() { // https://developer.mozilla.org/en-US/docs/M
     }
 }
 
+//------------------------------REFERER HEADER REMOVAL-------------------------------------------------------------------
+/* This functions takes care of blocking referer headers. Referer headers can be used to track a user's browsing behaviour.
+Referer headers can be removed the same way like ads or 
+*/
+function blockRefererHeader(enable){
+    const headerIndex = blockedDomains.length + blockedTrackers.length + 1;
+    if(enable){
+        const headerRule = [{
+            id: headerIndex,
+            priority: 1,
+            action: {
+                type: "modifyHeaders",
+                requestHeaders: [{
+                    header: "referer",
+                    operation: "remove"
+                }]
+            },
+            condition: {
+                urlFilter: "*",
+                resourceTypes: ["main_frame","script", "image", "xmlhttprequest", "sub_frame"]
+            }
+        }];
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: [headerIndex],
+            addRules: headerRule
+        });
+    }else{
+        chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: [headerIndex]
+        });
+    }
+}
