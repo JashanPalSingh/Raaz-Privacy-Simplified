@@ -3,6 +3,7 @@ manifest.JSON to tell the browser that this file will govern all the services pr
 
 //First, we define some variables that we will use within this file.
 let phishingReminderEnabled = false;
+let reminderShown = false;
 let adBlockEnabled = true;  // Variable that decides, the current status of out ad-block switch, we initialize it as true be default and update it as user changes preferences.
 let blockedDomains = [];    // This is an empty list that will soon contain about six thousand entries of blocked domains as we fetch them from our blocked_domains.JSON.
 let blockedTrackers = [];   // This list will contain over fifteen thousand nefarious trackers present in our blocked-trackers.JSON.
@@ -159,7 +160,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { //https://develo
         const emailDomains = ['mail.google.com', 'outlook.live.com', 'mail.yahoo.com'];
         const isEmailService = emailDomains.some(domain => tab.url.includes(domain));
         if (isEmailService) {
-            showSafeEmailReminder();
+            if(!reminderShown){
+                showSafeEmailReminder();
+                reminderShown = true;                
+            }            
+        } else {
+            reminderShown = false;
         }
     }
 });
