@@ -218,3 +218,14 @@ function blockRefererHeader(enable){
         });
     }
 }
+
+//------------------------------SECURITY DASHBOARD-------------------------------------------------------------------
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if(request.action === "getList") {
+        sendResponse({
+            domainLength: blockedDomains.length,
+            trackerLength: blockedTrackers.length
+        });
+    }
+});

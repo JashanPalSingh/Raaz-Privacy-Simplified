@@ -120,11 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showDash.addEventListener("click", () => {
         dashboard.className = "";
-    })    
-
-    dashDiv.innerHTML = "<p>Elloooo</p>";
-
-
-
-
+        chrome.runtime.sendMessage({action: "getList"}, (response) => {
+            if(response){
+                dashDiv.innerHTML = `<p> Domains blocked: ${response.domainLength}</p>
+                                    <p> Trackers blocked: ${response.trackerLength}</p>`
+            }else{
+                dashDiv.innerHTML = "<p>Failed to load data.</p>";
+            }
+        });
+    }); 
 });
