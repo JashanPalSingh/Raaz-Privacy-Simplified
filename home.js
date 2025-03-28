@@ -120,10 +120,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showDash.addEventListener("click", () => {
         dashboard.className = "";
+
         chrome.runtime.sendMessage({action: "getList"}, (response) => {
             if(response){
-                dashDiv.innerHTML = `<p> Domains blocked: ${response.domainLength}</p>
-                                    <p> Trackers blocked: ${response.trackerLength}</p>`
+                chrome.storage.local.get(["cookiesBlocked"], function(result){
+                    const cookies = result.cookiesBlocked || 0;
+                    dashDiv.innerHTML = `
+                    <p>Domains blocked: ${response.domainLength}</p>
+                    <p>Trackers blocked: ${response.trackerLength}</p>
+                    <p>Cookies Blocked in the session: ${cookies}</p>`;
+                });
             }else{
                 dashDiv.innerHTML = "<p>Failed to load data.</p>";
             }
