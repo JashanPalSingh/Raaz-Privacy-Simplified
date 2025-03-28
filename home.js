@@ -128,7 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     dashDiv.innerHTML = `
                     <p>Domains blocked: ${response.domainLength}</p>
                     <p>Trackers blocked: ${response.trackerLength}</p>
-                    <p>Cookies Blocked in the session: ${cookies}</p>`;
+                    <p>Cookies Blocked: ${cookies}</p>
+                    <p>Ads blocked this session: ${response.adsBlocked}</p>
+                    <p>Trackers blocked this session: ${response.trackersBlocked}</p>
+                    <p>Referers removed this session: ${response.referersRemoved}</p>`;
                 });
             }else{
                 dashDiv.innerHTML = "<p>Failed to load data.</p>";

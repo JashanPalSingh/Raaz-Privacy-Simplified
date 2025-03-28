@@ -135,6 +135,10 @@ function updateTrackerRules(enable) {
 */
 let cookiesBlocked = 0;
 
+chrome.storage.local.get("cookiesBlocked", (data) => {
+    cookiesBlocked = data.cookiesBlocked || 0;
+});
+
 function updateCookies(enable){
     if(enable){
         chrome.cookies.onChanged.addListener(changeInfo => { //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/cookies/onChanged
@@ -231,11 +235,35 @@ function blockRefererHeader(enable){
 
 //------------------------------SECURITY DASHBOARD-------------------------------------------------------------------
 
+let adsBlockedThisSession = 0;
+let trackersBlockedThisSession = 0;
+let referersRemovedThisSession = 0;
+
+
+chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((info) => { // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/onRuleMatchedDebug
+    if (info.rule.ruleId <= blockedDomains.length) {
+        adsBlockedThisSession++;
+    } else if (info.rule.ruleId <= blockedDomains.length + blockedTrackers.length) {
+        trackersBlockedThisSession++;
+    } else if (info.rule.ruleId === blockedDomains.length + blockedTrackers.length + 1) {
+        referersRemovedThisSession++;
+    }
+});
+
+chrome.storage.local.get(["adsBlocked", "trackersBlocked", "referersRemoved"], (data) => {
+    adsBlockedThisSession = data.adsBlocked || 0;
+    trackersBlockedThisSession = data.trackersBlocked || 0;
+    referersRemovedThisSession = data.referersRemoved || 0;
+});
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.action === "getList") {
         sendResponse({
             domainLength: blockedDomains.length,
-            trackerLength: blockedTrackers.length
+            trackerLength: blockedTrackers.length,
+            adsBlocked: adsBlockedThisSession,
+            trackersBlocked: trackersBlockedThisSession,
+            referersRemoved: referersRemovedThisSession
         });
     }
 });

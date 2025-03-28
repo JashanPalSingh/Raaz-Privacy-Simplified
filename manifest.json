@@ -3,7 +3,7 @@
     "description": "Privacy Chrome Extention that blocks ads, trackers, and searches mail for data breaches",
     "version": "1.0",
     "manifest_version": 3,
-    "permissions": ["webRequest", "declarativeNetRequest", "storage", "activeTab", "privacy", "storage", "tabs", "notifications", "cookies"],
+    "permissions": ["webRequest", "declarativeNetRequest", "storage", "activeTab", "privacy", "storage", "tabs", "notifications", "cookies", "declarativeNetRequestFeedback"],
     "host_permissions": ["<all_urls>"],
     "action": {
       "default_popup": "index.html",
