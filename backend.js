@@ -189,8 +189,9 @@ function showSafeEmailReminder() { // https://developer.mozilla.org/en-US/docs/M
         chrome.notifications.create({
             type: 'basic',
             iconUrl: 'smallLogo.PNG',
-            title: 'Safe Email Practices Reminder',
-            message: 'Safe Email Reminder!!!!!',
+            title: 'Watch out for phishing attempts!',
+            // https://www.cyber.gc.ca/en/guidance/dont-take-bait-recognize-and-avoid-phishing-attacks 
+            message: "Remember, something is wrong if: \n a. you dom't recognize the sender's name. \n b. There are spelling mistakes.\n c. Sender requests you informatipn. \n d. Sender provides liks to log in to.\n Remember:\n Do not open any attachments from an email you do not recognize! \n Do not send sensitive information over email!",
             priority: 2
         });
     }
