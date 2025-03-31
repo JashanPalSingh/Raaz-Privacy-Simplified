@@ -133,21 +133,7 @@ function updateTrackerRules(enable) {
     If our switch is off, third-party cookies are allowed (true).
     Source: https://sunnyzhou-1024.github.io/chrome-extension-docs/extensions/privacy.html 
 */
-let cookiesBlocked = 0;
-
-chrome.storage.local.get("cookiesBlocked", (data) => {
-    cookiesBlocked = data.cookiesBlocked || 0;
-});
-
 function updateCookies(enable){
-    if(enable){
-        chrome.cookies.onChanged.addListener(changeInfo => { //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/cookies/onChanged
-            if(changeInfo.cause === "overwrite"){
-                cookiesBlocked++;
-                chrome.storage.local.set({cookiesBlocked});
-            }                
-        });
-    }    
     chrome.privacy.websites.thirdPartyCookiesAllowed.set({ value: !enable });
 }
 

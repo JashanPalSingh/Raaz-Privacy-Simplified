@@ -123,16 +123,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         chrome.runtime.sendMessage({action: "getList"}, (response) => {
             if(response){
-                chrome.storage.local.get(["cookiesBlocked"], function(result){
-                    const cookies = result.cookiesBlocked || 0;
                     dashDiv.innerHTML = `
-                    <p>Domains blocked: ${response.domainLength}</p>
-                    <p>Trackers blocked: ${response.trackerLength}</p>
-                    <p>Cookies Blocked: ${cookies}</p>
-                    <p>Ads blocked this session: ${response.adsBlocked}</p>
-                    <p>Trackers blocked this session: ${response.trackersBlocked}</p>
-                    <p>Referers removed this session: ${response.referersRemoved}</p>`;
-                });
+                    <p><b>Total Ad Domains blocked </b> <h1>${response.domainLength}</h1></p>
+                    <p><b>Total Trackers blocked</b> <h1>${response.trackerLength}</h1></p>
+                    <p><b>Ads blocked this session</b> <h1>${response.adsBlocked}</h1></p>
+                    <p><b>Trackers blocked this session</b> <h1>${response.trackersBlocked}</h1></p>
+                    <p><b>Referers removed this session</b> <h1>${response.referersRemoved}</h1></p>`;
+                // });
             }else{
                 dashDiv.innerHTML = "<p>Failed to load data.</p>";
             }
