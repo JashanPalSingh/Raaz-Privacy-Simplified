@@ -138,7 +138,14 @@ function updateCookies(enable){
 }
 
 //---------------------------------SAFE EMAIL REMINDER----------------------------------------------------------------------
-
+/* This section of the code provides safety reminders when a user visits an email service. The code 
+monitors browser tabs using the tabs.onUpdated listner. When an email domain is detected, a notification 
+is shown. The reminder can be toggled on/off through the extension and this prefrence is saved using the
+chrome.storage.sync. The notification includes common phishing and safety recommendations.
+Reference 1: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onUpdated
+Reference 2: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Notifications
+Reference 3: https://www.cyber.gc.ca/en/guidance/dont-take-bait-recognize-and-avoid-phishing-attacks
+ */
 chrome.storage.sync.get("phishingReminderToggle", (result) => {
     if (result.phishingReminderToggle !== undefined) {
         phishingReminderEnabled = result.phishingReminderToggle;
@@ -155,7 +162,7 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 });
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { //https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/tabs/onUpdated
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { //
     if (changeInfo.status === 'complete' && tab.url) {
         const emailDomains = ['mail.google.com', 'outlook.live.com', 'mail.yahoo.com'];
         const isEmailService = emailDomains.some(domain => tab.url.includes(domain));
@@ -170,13 +177,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { //https://develo
     }
 });
 
-function showSafeEmailReminder() { // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Notifications
+function showSafeEmailReminder() { // 
     if (phishingReminderEnabled) {
         chrome.notifications.create({
             type: 'basic',
             iconUrl: 'smallLogo.PNG',
             title: 'Watch out for phishing attempts!',
-            // https://www.cyber.gc.ca/en/guidance/dont-take-bait-recognize-and-avoid-phishing-attacks 
             message: "Remember, something is wrong if: \n a. you dom't recognize the sender's name. \n b. There are spelling mistakes.\n c. Sender requests you informatipn. \n d. Sender provides liks to log in to.\n Remember:\n Do not open any attachments from an email you do not recognize! \n Do not send sensitive information over email!",
             priority: 2
         });
@@ -221,13 +227,17 @@ function blockRefererHeader(enable){
 }
 
 //------------------------------SECURITY DASHBOARD-------------------------------------------------------------------
-
+/* This section of the code tracks and sends statistics for the number of blocked ads, trackers and the number of referer header removed 
+in a browsing session. These stats are reset when the browser is closed. The onRuleMatchedDebug listener increments the counter when 
+blocking rules are triggered and it distinguishes between ads, trackers blocked and referes removed based on the rule IDs.
+Reference: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/onRuleMatchedDebug
+*/
 let adsBlockedThisSession = 0;
 let trackersBlockedThisSession = 0;
 let referersRemovedThisSession = 0;
 
 
-chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((info) => { // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/onRuleMatchedDebug
+chrome.declarativeNetRequest.onRuleMatchedDebug.addListener((info) => { 
     if (info.rule.ruleId <= blockedDomains.length) {
         adsBlockedThisSession++;
     } else if (info.rule.ruleId <= blockedDomains.length + blockedTrackers.length) {

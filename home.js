@@ -97,6 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const phishingReminderCheckbox = document.querySelector("#togglePhishingReminder");
 
+    /* Get the value of reminder toggle switch present in the chrome storage. If undefined, we set the value to 
+    off by default and then save this to the local storage. */
     chrome.storage.sync.get("phishingReminderToggle", (result) => {
         if (result.phishingReminderToggle !== undefined) {
             phishingReminderCheckbox.checked = result.phishingReminderToggle;
@@ -106,6 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    /* This listner detects the change made to the switch and sends a runtime message to the listner in the backend.js
+    file with the new toogle state. */
     phishingReminderCheckbox.addEventListener("change", () => {
         const isEnabled = phishingReminderCheckbox.checked;
         chrome.storage.sync.set({phishingReminderToggle: isEnabled});
@@ -114,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //---------------------------------END OF SAFE EMAIL REMINDER--------------------------------------------------//
 
     //---------------------------------SECURITY DASHBOARD--------------------------------------------------//
+    
     const showDash = document.querySelector("#showDash");
     const dashboard = document.querySelector("#dashboard");    
     const dashDiv = document.querySelector("#dashDiv");
@@ -121,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showDash.addEventListener("click", () => {
         dashboard.className = "";
 
+        // Sends a message to a listner in the backend file requesting data to be displayed.
         chrome.runtime.sendMessage({action: "getList"}, (response) => {
             if(response){
                     dashDiv.innerHTML = `
