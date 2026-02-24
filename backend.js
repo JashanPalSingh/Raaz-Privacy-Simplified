@@ -177,14 +177,25 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { //
     }
 });
 
-function showSafeEmailReminder() { // 
+function showSafeEmailReminder() {
     if (phishingReminderEnabled) {
-        chrome.notifications.create({
-            type: 'basic',
-            iconUrl: 'smallLogo.PNG',
-            title: 'Watch out for phishing attempts!',
-            message: "Remember, something is wrong if: \n a. you dom't recognize the sender's name. \n b. There are spelling mistakes.\n c. Sender requests you informatipn. \n d. Sender provides liks to log in to.\n Remember:\n Do not open any attachments from an email you do not recognize! \n Do not send sensitive information over email!",
-            priority: 2
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0]?.id) {
+                chrome.scripting.executeScript({
+                    target: { tabId: tabs[0].id },
+                    func: () => {
+                        alert("Watch out for phishing attempts!\n\n" +
+                              "Remember, something is wrong if:\n" +
+                              "a. you don't recognize the sender's name.\n" +
+                              "b. There are spelling mistakes.\n" +
+                              "c. Sender requests your information.\n" +
+                              "d. Sender provides links to log in to.\n\n" +
+                              "Remember:\n" +
+                              "Do not open any attachments from an email you do not recognize!\n" +
+                              "Do not send sensitive information over email!");
+                    }
+                });
+            }
         });
     }
 }
